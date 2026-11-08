@@ -1,4 +1,5 @@
-import { GuessResult } from "./types.js";
+import { GuessResult, NumericBase } from './types.js';
+
 
 export const evaluateGuess = (secret: string, guess: string): GuessResult => {
   const sChars = secret.toLowerCase().split("");
@@ -16,4 +17,13 @@ export const evaluateGuess = (secret: string, guess: string): GuessResult => {
   }, 0);
 
   return { bulls, cows };
+};
+
+
+export const generateSecret = (
+  _length: number,
+  _base: NumericBase,
+  _random: () => number = Math.random
+): string => {
+  return '';
 };
