@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { evaluateGuess, generateSecret} from '../src/core/game.js';
+import { countPossibleSecrets, evaluateGuess, generateSecret} from '../src/core/game.js';
 
 
 describe('evaluateGuess', () => {
@@ -66,5 +66,27 @@ describe('generateSecret', () => {
     const pickFirstRng = () => 0;
     const secret = generateSecret(3, 8, pickFirstRng);
     expect(secret.startsWith('0')).toBe(true);
+  });
+});
+describe('countPossibleSecrets', () => {
+  it('correctly calculates permutations for binary base (2)', () => {
+    expect(countPossibleSecrets(2, 2)).toBe(2);
+  });
+
+  it('correctly calculates permutations for decimal base (10)', () => {
+    expect(countPossibleSecrets(4, 10)).toBe(5040);
+    expect(countPossibleSecrets(1, 10)).toBe(10);
+  });
+
+  it('correctly calculates permutations for hexadecimal base (16)', () => {
+    expect(countPossibleSecrets(2, 16)).toBe(240);
+  });
+
+  it('returns 1 when length is 0 (empty permutation)', () => {
+    expect(countPossibleSecrets(0, 10)).toBe(1);
+  });
+
+  it('returns 0 when length exceeds base', () => {
+    expect(countPossibleSecrets(3, 2)).toBe(0);
   });
 });

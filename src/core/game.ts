@@ -52,3 +52,10 @@ export const generateSecret = (
 
   return pickRecursively(pool, length, []).join("");
 };
+
+export const countPossibleSecrets = (
+  _length: number,
+  _base: NumericBase
+): number => {
+  return -1;
+};
