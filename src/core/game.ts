@@ -1,8 +1,19 @@
-import { GuessResult } from './types.js';
+import { GuessResult } from "./types.js";
 
-export const evaluateGuess = (
-  _secret: string,
-  _guess: string
-): GuessResult => {
-  return { bulls: -1, cows: -1 };
+export const evaluateGuess = (secret: string, guess: string): GuessResult => {
+  const sChars = secret.toLowerCase().split("");
+  const gChars = guess.toLowerCase().split("");
+
+  const bulls = gChars.reduce(
+    (count, char, index) => (char === sChars[index] ? count + 1 : count),
+    0
+  );
+
+  const cows = gChars.reduce((count, char, index) => {
+    const isPresent = sChars.includes(char);
+    const isBull = char === sChars[index];
+    return isPresent && !isBull ? count + 1 : count;
+  }, 0);
+
+  return { bulls, cows };
 };
