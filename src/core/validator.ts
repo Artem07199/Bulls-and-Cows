@@ -44,10 +44,18 @@ export const createDigitValidator =
     return allowed ? allowed.includes(lower) : false;
   };
 
-  export const isValidGuess = (
-  _guess: string,
-  _length: number,
-  _base: NumericBase
-): boolean => {
-  return false;
+export const isValidGuess = (guess: string, length: number, base: NumericBase): boolean => {
+  if (guess.length !== length) {
+    return false;
+  }
+  const isDigitValid = createDigitValidator(base);
+  const normalizedChars = guess.toLowerCase().split("");
+
+  const allDigitsValid = normalizedChars.every(isDigitValid);
+  if (!allDigitsValid) {
+    return false;
+  }
+
+  const uniqueChars = new Set(normalizedChars);
+  return uniqueChars.size === length;
 };
