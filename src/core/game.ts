@@ -53,9 +53,38 @@ export const generateSecret = (
   return pickRecursively(pool, length, []).join("");
 };
 
-export const countPossibleSecrets = (
-  _length: number,
-  _base: NumericBase
-): number => {
-  return -1;
+const countPermutations = (length: number, base: number): number => {
+  if (length === 0) {
+    return 1;
+  }
+  if (length > base || length < 0 || base <= 0) {
+    return 0;
+  }
+  return base * countPermutations(length - 1, base - 1);
 };
+
+const memoize2 = <T, U, R>(fn: (a: T, b: U) => R): ((a: T, b: U) => R) => {
+  const cache = new Map<string, R>();
+  return (a: T, b: U): R => {
+    const key = `${String(a)}:${String(b)}`;
+    const cached = cache.get(key);
+    if (cached !== undefined) {
+      return cached;
+    }
+    const computed = fn(a, b);
+    cache.set(key, computed);
+    return computed;
+  };
+};
+
+const normalizeBase = (base: NumericBase): number => {
+  if (typeof base === "number") {
+    return base;
+  }
+  const map: Record<string, number> = { bin: 2, oct: 8, dec: 10, hex: 16 };
+  return map[base] ?? 10;
+};
+
+export const countPossibleSecrets = memoize2((length: number, base: NumericBase): number => {
+  return countPermutations(length, normalizeBase(base));
+});
