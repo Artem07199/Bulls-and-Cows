@@ -43,3 +43,11 @@ export const createDigitValidator =
     const allowed = BASE_CHAR_SETS[base];
     return allowed ? allowed.includes(lower) : false;
   };
+
+  export const isValidGuess = (
+  _guess: string,
+  _length: number,
+  _base: NumericBase
+): boolean => {
+  return false;
+};
