@@ -1,5 +1,4 @@
-import { GuessResult, NumericBase } from './types.js';
-
+import { GuessResult, NumericBase } from "./types.js";
 
 export const evaluateGuess = (secret: string, guess: string): GuessResult => {
   const sChars = secret.toLowerCase().split("");
@@ -19,11 +18,37 @@ export const evaluateGuess = (secret: string, guess: string): GuessResult => {
   return { bulls, cows };
 };
 
+const BASE_DIGITS: Record<string | number, readonly string[]> = {
+  2: ["0", "1"],
+  8: ["0", "1", "2", "3", "4", "5", "6", "7"],
+  10: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+  16: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"],
+  bin: ["0", "1"],
+  oct: ["0", "1", "2", "3", "4", "5", "6", "7"],
+  dec: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+  hex: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"],
+};
 
 export const generateSecret = (
-  _length: number,
-  _base: NumericBase,
-  _random: () => number = Math.random
+  length: number,
+  base: NumericBase,
+  random: () => number = Math.random
 ): string => {
-  return '';
+  const pool = BASE_DIGITS[base] ?? BASE_DIGITS[10];
+
+  const pickRecursively = (
+    remainingPool: readonly string[],
+    needed: number,
+    accumulated: readonly string[]
+  ): readonly string[] => {
+    if (needed === 0 || remainingPool.length === 0) {
+      return accumulated;
+    }
+    const index = Math.floor(random() * remainingPool.length);
+    const chosen = remainingPool[index];
+    const nextPool = remainingPool.filter((_, i) => i !== index);
+    return pickRecursively(nextPool, needed - 1, [...accumulated, chosen]);
+  };
+
+  return pickRecursively(pool, length, []).join("");
 };
